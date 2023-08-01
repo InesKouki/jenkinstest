@@ -53,13 +53,14 @@ pipeline {
         }
         
         stage('Publish to Nexus') {
-            steps {
-                // Declare the Maven path using 'withMaven'
-                withMaven(maven: 'Maven') {
-                    // Publish Maven artifacts to Nexus hosted repository
-                    sh 'mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=Nexus-user -Dmaven.password=Esprit2023'
-                }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'Nexus_user', usernameVariable: 'Nexus_user', passwordVariable: 'Esprit2023')]) {
+            // Declare the Maven path using 'withMaven'
+            withMaven(maven: 'Maven') {
+                // Publish Maven artifacts to Nexus hosted repository
+                sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=${NEXUS_USERNAME} -Dmaven.password=${NEXUS_PASSWORD}"
             }
         }
     }
+}
 }
