@@ -15,13 +15,9 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus-releases</id>
-            <url>http://172.18.0.4:8081/repository/NexusRepo/maven-releases/</url>
+            <id>NexusRepo</id>
+            <url>http://172.18.0.4:8081/repository/NexusRepo/</url>
         </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <url>http://172.18.0.4:8081/repository/NexusRepo/maven-snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
