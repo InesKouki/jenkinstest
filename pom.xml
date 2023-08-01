@@ -16,11 +16,11 @@
     <distributionManagement>
         <repository>
             <id>nexus-releases</id>
-            <url>http://your-nexus-server:8081/repository/maven-releases/</url>
+            <url>http://172.18.0.4:8081/repository/NexusRepo/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
-            <url>http://your-nexus-server:8081/repository/maven-snapshots/</url>
+            <url>http://172.18.0.4:8081/repository/NexusRepo/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
