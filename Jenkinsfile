@@ -54,7 +54,7 @@ pipeline {
         
         stage('Publish to Nexus') {
     steps {
-        withCredentials([usernamePassword(credentialsId: 'Nexus_user', usernameVariable: 'Nexus_user', passwordVariable: 'Esprit2023')]) {
+        withCredentials([usernamePassword(credentialsId: 'Nexus_user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
             // Declare the Maven path using 'withMaven'
             withMaven(maven: 'Maven') {
                 // Publish Maven artifacts to Nexus hosted repository
@@ -62,5 +62,7 @@ pipeline {
             }
         }
     }
+}
+
 }
 }
