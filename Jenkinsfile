@@ -54,7 +54,7 @@ pipeline {
         stage('Test Credentials') {
     steps {
         script {
-            withCredentials([usernamePassword(credentialsId: 'NexusCredentialsId', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+            withCredentials([usernamePassword(credentialsId: 'Nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                 echo "Nexus Username: ${NEXUS_USERNAME}"
                 echo "Nexus Password: ${NEXUS_PASSWORD}"
             }
