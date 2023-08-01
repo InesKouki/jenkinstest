@@ -51,6 +51,15 @@ pipeline {
                 }
             }
         }
+        stage('Test Credentials') {
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'NexusCredentialsId', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                echo "Nexus Username: ${NEXUS_USERNAME}"
+                echo "Nexus Password: ${NEXUS_PASSWORD}"
+            }
+        }
+    }
         
         stage('Publish to Nexus') {
     steps {
