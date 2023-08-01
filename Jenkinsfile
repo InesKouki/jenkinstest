@@ -51,16 +51,22 @@ pipeline {
                 }
             }
         }
-        stage('Test Credentials') {
+      stage('Test Credentials') {
     steps {
         script {
-            withCredentials([usernamePassword(credentialsId: 'Nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                echo "Nexus Username: ${NEXUS_USERNAME}"
-                echo "Nexus Password: ${NEXUS_PASSWORD}"
+            def nexusCredentials = credentials('Nexus-user')
+            if (nexusCredentials) {
+                def nexusUsername = nexusCredentials.username
+                def nexusPassword = nexusCredentials.password
+
+                echo "Nexus Username: ${nexusUsername}"
+                echo "Nexus Password: ${nexusPassword}"
+            } else {
+                error "Could not retrieve Nexus credentials"
             }
         }
     }
-        }
+}
         
         stage('Publish to Nexus') {
     steps {
