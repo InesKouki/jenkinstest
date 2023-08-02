@@ -15,8 +15,8 @@
 
     <distributionManagement>
         <repository>
-            <id>NexusRepo</id>
-            <url>http://172.18.0.4:8081/repository/NexusRepo/</url>
+            <id>JenkinsNexus</id>
+            <url>http://172.18.0.4:8081/repository/JenkinsNexus/</url>
         </repository>
     </distributionManagement>
 
