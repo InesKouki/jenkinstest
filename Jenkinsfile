@@ -54,14 +54,11 @@ pipeline {
         
         stage('Publish to Nexus') {
     steps {
-        // Define your Nexus username and password here
-        def nexusUsername = 'Nexus-user'
-        def nexusPassword = 'Esprit2023'
-
+    
         // Declare the Maven path using 'withMaven'
         withMaven(maven: 'Maven') {
             // Publish Maven artifacts to Nexus hosted repository
-            sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=${nexusUsername} -Dmaven.password=${nexusPassword}"
+            sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=Nexus-user -Dmaven.password=Esprit2023"
         }
     }
 }
