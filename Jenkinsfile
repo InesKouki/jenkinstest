@@ -58,7 +58,7 @@ pipeline {
         // Declare the Maven path using 'withMaven'
         withMaven(maven: 'Maven') {
             // Publish Maven artifacts to Nexus hosted repository
-            sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=Nexus-user -Dmaven.password=Esprit2023"
+            sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/JenkinsNexus/ -Dmaven.username=Jenkins -Dmaven.password=Esprit2023"
         }
     }
 }
