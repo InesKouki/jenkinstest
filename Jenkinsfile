@@ -51,31 +51,17 @@ pipeline {
                 }
             }
         }
-      stage('Test Credentials') {
-    steps {
-        script {
-            def nexusCredentials = credentials('Nexus-user')
-            if (nexusCredentials) {
-                def nexusUsername = nexusCredentials.username
-                def nexusPassword = nexusCredentials.password
-
-                echo "Nexus Username: ${nexusUsername}"
-                echo "Nexus Password: ${nexusPassword}"
-            } else {
-                error "Could not retrieve Nexus credentials"
-            }
-        }
-    }
-}
         
         stage('Publish to Nexus') {
     steps {
-      withCredentials([usernamePassword(credentialsId: 'Nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-            // Declare the Maven path using 'withMaven'
-            withMaven(maven: 'Maven') {
-                // Publish Maven artifacts to Nexus hosted repository
-                sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=${NEXUS_USERNAME} -Dmaven.password=${NEXUS_PASSWORD}"
-            }
+        // Define your Nexus username and password here
+        def nexusUsername = 'Nexus-user'
+        def nexusPassword = 'Esprit2023'
+
+        // Declare the Maven path using 'withMaven'
+        withMaven(maven: 'Maven') {
+            // Publish Maven artifacts to Nexus hosted repository
+            sh "mvn deploy -Dmaven.repo.url=http://172.18.0.4:8081/repository/NexusRepo/ -Dmaven.username=${nexusUsername} -Dmaven.password=${nexusPassword}"
         }
     }
 }
