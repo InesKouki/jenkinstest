@@ -3,7 +3,7 @@ pipeline {
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "http://172.18.0.4:8081"
+        NEXUS_URL = "172.18.0.4:8081"
         NEXUS_REPOSITORY = "JenkinsNexus"
         NEXUS_CREDENTIAL_ID = "NEXUS_CRED"
     }
@@ -14,7 +14,7 @@ pipeline {
                 git 'https://github.com/InesKouki/jenkinstest.git'
             }
         }
-
+        
         stage('Build') {
             steps {
                 // Declare the Maven path using 'withMaven'
@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('SonarQube Analysis') {
             steps {
                 // Run SonarQube scanner with custom PATH
@@ -40,7 +40,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Test') {
             steps {
                 // Declare the Maven path using 'withMaven'
@@ -49,7 +49,7 @@ pipeline {
                     sh 'mvn test'
                 }
             }
-
+            
             post {
                 // Archive the test results
                 always {
@@ -57,8 +57,8 @@ pipeline {
                 }
             }
         }
-
-       stage("Publish to Nexus Repository Manager") {
+        
+        stage("Publish to Nexus Repository Manager") {
             steps {
                 script {
                     pom = readMavenPom file: "pom.xml";
@@ -93,5 +93,6 @@ pipeline {
                 }
             }
         }
-    }
+
+}
 }
