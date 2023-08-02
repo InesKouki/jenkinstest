@@ -30,8 +30,10 @@ pipeline {
                 // Run SonarQube scanner with custom PATH
                 withSonarQubeEnv('Sonarqube') {
                     // Add Maven binary to PATH
-                    def mavenHome = tool 'Maven'
-                    env.PATH = "${mavenHome}/bin:${env.PATH}"
+                    script {
+                        def mavenHome = tool 'Maven'
+                        env.PATH = "${mavenHome}/bin:${env.PATH}"
+                    }
 
                     // Run the SonarQube analysis on your Maven project
                     sh 'mvn sonar:sonar -Dsonar.host.url=http://172.18.0.3:9000 -Dsonar.login=squ_b3452d6629db6a310d42645b4361740d1e0e8bc9'
