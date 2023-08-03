@@ -8,7 +8,7 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "NEXUS_CRED"
     }
     stages {
-        stage('Checkout') {
+        stage('GIT Checkout ') {
             steps {
                 // Checkout your Maven project from Git
                 // test
@@ -22,6 +22,23 @@ pipeline {
                 withMaven(maven: 'Maven') {
                     // Run the Maven build
                     sh 'mvn clean package'
+                }
+            }
+        }
+
+          stage('Test') {
+            steps {
+                // Declare the Maven path using 'withMaven'
+                withMaven(maven: 'Maven') {
+                    // Run the tests with Maven
+                    sh 'mvn test'
+                }
+            }
+            
+            post {
+                // Archive the test results
+                always {
+                    junit '**/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -41,23 +58,7 @@ pipeline {
                 }
             }
         }
-        
-        stage('Test') {
-            steps {
-                // Declare the Maven path using 'withMaven'
-                withMaven(maven: 'Maven') {
-                    // Run the tests with Maven
-                    sh 'mvn test'
-                }
-            }
-            
-            post {
-                // Archive the test results
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
+    
         
         stage("Publish to Nexus Repository Manager") {
             steps {
