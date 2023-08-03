@@ -11,6 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your Maven project from Git
+                // test
                 git 'https://github.com/InesKouki/jenkinstest.git'
             }
         }
