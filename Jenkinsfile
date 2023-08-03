@@ -54,7 +54,7 @@ pipeline {
                     }
 
                     // Run the SonarQube analysis on your Maven project
-                    sh 'mvn sonar:sonar -Dsonar.host.url=http://172.18.0.3:9000 -Dsonar.login=squ_b3452d6629db6a310d42645b4361740d1e0e8bc9'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
