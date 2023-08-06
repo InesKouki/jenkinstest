@@ -107,7 +107,7 @@ pipeline {
             steps {
                 script {
                  withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-                    sh 'docker login -u ineskouki -p ${dockerhubpwd}'
+                    sh 'docker login -u ineskouki -p ${dockerhub}'
                  }  
                  sh 'docker push ineskouki/my-app-1.0'
                 }
