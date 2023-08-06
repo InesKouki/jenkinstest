@@ -2,6 +2,7 @@ pipeline {
     agent any
      tools {
         maven 'Maven'
+         docker 'Docker'
     }
     environment {
         NEXUS_VERSION = "nexus3"
@@ -95,18 +96,20 @@ pipeline {
             }
         }
 
-      stage("Build & Push Docker Image") {
+     stage("Build & Push Docker Image") {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CRED_ID) {
-                        docker_image = docker.build "${IMAGE_NAME}:${IMAGE_TAG}"
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image = docker.build "${IMAGE_NAME}"
                     }
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CRED_ID) {
-                        docker_image.push("${IMAGE_NAME}:${IMAGE_TAG}")
-                        docker_image.push("${IMAGE_NAME}:latest")
+
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
                     }
                 }
             }
+
         }
 
 }
