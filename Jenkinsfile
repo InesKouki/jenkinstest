@@ -9,6 +9,14 @@ pipeline {
         NEXUS_URL = "172.18.0.4:8081"
         NEXUS_REPOSITORY = "JenkinsNexus"
         NEXUS_CREDENTIAL_ID = "NEXUS_CRED"
+
+        APP_NAME = "Jenkins-pipeline-test"
+        RELEASE = "1.0.0"
+        DOCKER_USER = "ineskouki"
+        DOCKER_PASS = 'dockerhub'
+        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+       
     }
     stages {
             stage("Cleanup Workspace"){
@@ -85,6 +93,21 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage("Build & Push Docker Image") {
+            steps {
+                script {
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image = docker.build "${IMAGE_NAME}"
+                    }
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
+                }
+            }
+
         }
 
 }
