@@ -96,20 +96,22 @@ pipeline {
             }
         }
 
-        stage("Build & Push Docker Image") {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('',DOCKER_CRED_ID) {
-                        docker_image = docker.build "${IMAGE_NAME}"
-                    }
-
-                    docker.withRegistry('',DOCKER_CRED_ID) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
+                  sh 'docker build -t ineskouki/my-app-1.0 .'
                 }
             }
-
+        }
+        stage('Deploy Docker Image') {
+            steps {
+                script {
+                 withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
+                    sh 'docker login -u ineskouki -p ${dockerhubpwd}'
+                 }  
+                 sh 'docker push ineskouki/my-app-1.0'
+                }
+            }
         }
 
      
