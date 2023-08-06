@@ -13,8 +13,8 @@ pipeline {
         APP_NAME = "Jenkins-pipeline-test"
         RELEASE = "1.0.0"
         DOCKER_USER = "ineskouki"
-        DOCKER_PASS = 'dockerhub'
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        DOCKER_CRED_ID = "dockerhub"
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
        
     }
@@ -95,19 +95,18 @@ pipeline {
             }
         }
 
-        stage("Build & Push Docker Image") {
+      stage("Build & Push Docker Image") {
             steps {
                 script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image = docker.build "${IMAGE_NAME}"
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CRED_ID) {
+                        docker_image = docker.build "${IMAGE_NAME}:${IMAGE_TAG}"
                     }
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CRED_ID) {
+                        docker_image.push("${IMAGE_NAME}:${IMAGE_TAG}")
+                        docker_image.push("${IMAGE_NAME}:latest")
                     }
                 }
             }
-
         }
 
 }
