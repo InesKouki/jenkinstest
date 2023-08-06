@@ -1,8 +1,8 @@
 pipeline {
     agent any
      tools {
+        jdk 'OpenJDK8'
         maven 'Maven'
-         'docker'
     }
     
     environment {
