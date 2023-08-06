@@ -1,5 +1,8 @@
 pipeline {
     agent any
+     tools {
+        maven 'Maven'
+    }
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
@@ -8,57 +11,36 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "NEXUS_CRED"
     }
     stages {
-        stage('GIT Checkout ') {
+            stage("Cleanup Workspace"){
             steps {
-                // Checkout your Maven project from Git
-                // test
+                cleanWs()
+            }
+
+        }
+        stage('Checkout from SCM') {
+            steps {
                 git 'https://github.com/InesKouki/jenkinstest.git'
             }
         }
-        
-        stage('Build') {
+       stage("Build Application"){
             steps {
-                // Declare the Maven path using 'withMaven'
-                withMaven(maven: 'Maven') {
-                    // Run the Maven build
-                    sh 'mvn clean package'
-                }
+                sh "mvn clean package"
             }
         }
-
-          stage('Test') {
+        stage("Test Application"){
             steps {
-                // Declare the Maven path using 'withMaven'
-                withMaven(maven: 'Maven') {
-                    // Run the tests with Maven
-                    sh 'mvn test'
-                }
-            }
-            
-            post {
-                // Archive the test results
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
+                sh "mvn test"
             }
         }
-        
-        stage('SonarQube Analysis') {
+         stage("Sonarqube Analysis") {
             steps {
-                // Run SonarQube scanner with custom PATH
-                withSonarQubeEnv('Sonarqube') {
-                    // Add Maven binary to PATH
-                    script {
-                        def mavenHome = tool 'Maven'
-                        env.PATH = "${mavenHome}/bin:${env.PATH}"
+                script {
+                    withSonarQubeEnv('Sonarqube') {
+                        sh "mvn sonar:sonar"
                     }
-
-                    // Run the SonarQube analysis on your Maven project
-                    sh 'mvn sonar:sonar'
                 }
             }
         }
-    
         
         stage("Publish to Nexus Repository Manager") {
             steps {
