@@ -15,7 +15,7 @@ pipeline {
         APP_NAME = "Jenkins-pipeline-test"
         RELEASE = "1.0.0"
         DOCKER_USER = "ineskouki"
-        DOCKER_PASS = "dockerhub"
+        DOCKER_PASS = "DOCKER_CRED"
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
        
