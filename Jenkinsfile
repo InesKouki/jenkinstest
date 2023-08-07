@@ -12,7 +12,7 @@ pipeline {
         NEXUS_REPOSITORY = "JenkinsNexus"
         NEXUS_CREDENTIAL_ID = "NEXUS_CRED"
 
-        APP_NAME = "Jenkins-pipeline-test"
+        APP_NAME = "jenkins-pipeline-test"
         RELEASE = "1.0.0"
         DOCKER_USER = "ineskouki"
         DOCKER_PASS = "DOCKER_CRED"
