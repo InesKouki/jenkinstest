@@ -42,24 +42,77 @@ pipeline {
                 sh "mvn test"
             }
         }
-         
 
-        stage('Build Docker Image') {
+       stage("Sonarqube Analysis") {
             steps {
                 script {
-                  sh 'docker build -t ineskouki/my-app-1.0 .'
+                    withSonarQubeEnv('Sonarqube') {
+                        sh "mvn sonar:sonar"
+                    }
                 }
             }
         }
-        stage('Deploy Docker Image') {
+        
+        stage("Quality Gate") {
             steps {
                 script {
-                 withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-                    sh 'docker login -u ineskouki -p ${dockerhub}'
-                 }  
-                 sh 'docker push ineskouki/my-app-1.0'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
                 }
             }
+
+        }
+        
+        stage("Publish to Nexus Repository Manager") {
+            steps {
+                script {
+                    pom = readMavenPom file: "pom.xml";
+                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    artifactPath = filesByGlob[0].path;
+                    artifactExists = fileExists artifactPath;
+                    if(artifactExists) {
+                        echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                        nexusArtifactUploader(
+                            nexusVersion: NEXUS_VERSION,
+                            protocol: NEXUS_PROTOCOL,
+                            nexusUrl: NEXUS_URL,
+                            groupId: pom.groupId,
+                            version: pom.version,
+                            repository: NEXUS_REPOSITORY,
+                            credentialsId: NEXUS_CREDENTIAL_ID,
+                            artifacts: [
+                                [artifactId: pom.artifactId,
+                                classifier: '',
+                                file: artifactPath,
+                                type: pom.packaging],
+                                [artifactId: pom.artifactId,
+                                classifier: '',
+                                file: "pom.xml",
+                                type: "pom"]
+                            ]
+                        );
+                    } else {
+                        error "*** File: ${artifactPath}, could not be found";
+                    }
+                }
+            }
+        }
+         
+
+        stage("Build & Push Docker Image") {
+            steps {
+                script {
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image = docker.build "${IMAGE_NAME}"
+                    }
+
+                    docker.withRegistry('',DOCKER_PASS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
+                }
+            }
+
         }
 
      
