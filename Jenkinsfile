@@ -53,6 +53,15 @@ pipeline {
 
         }
 
+	    stage("Deploy Docker Image") {
+            steps {
+                script {
+                    def app_container = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
+                    app_container.run("-p 8080:8080 -d")
+                }
+            }
+        }
+
         stage("Trivy Scan") {
             steps {
                 script {
