@@ -53,32 +53,25 @@ pipeline {
 
         }
 
-	    stage("Deploy Docker Image") {
-            steps {
-                script {
-                    def app_container = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
-                    app_container.run("-p 8082:8080 -d")
-                }
-            }
+	  stage("Deploy Docker Image") {
+   		steps {
+        	  script {
+            def app_container = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
+            def new_image_tag = "${RELEASE}-latest"
+            
+            // Tag the container with the new tag
+            app_container.tag("${DOCKER_USER}/${APP_NAME}:${new_image_tag}")
+            
+            // Run the container with port mapping
+            def container_id = app_container.run("-p 8082:8080 -d")
+            
+            // Print the container ID for reference
+            echo "Docker container ID: ${container_id}"
         }
+    }
+}
 
-        stage("Trivy Scan") {
-            steps {
-                script {
-		   sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${IMAGE_NAME}:${IMAGE_TAG} --no-progress --scanners vuln --timeout 1h  --exit-code 0 --severity HIGH,CRITICAL --format table')
-                }
-            }
-
-        }
-
-        stage ('Cleanup Artifacts') {
-            steps {
-                script {
-                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker rmi ${IMAGE_NAME}:latest"
-                }
-            }
-        }
+        
 
      
 
