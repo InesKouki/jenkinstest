@@ -53,7 +53,7 @@ pipeline {
 
         }
 
-	 stage("Deploy Docker Image") {
+	stage("Deploy Docker Image") {
     steps {
         script {
             def app_container = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
@@ -71,6 +71,8 @@ pipeline {
         }
     }
 }
+
+
 
 
         
