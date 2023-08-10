@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script {
                     def app_container = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
-                    app_container.run("-p 8080:8080 -d")
+                    app_container.run("-p 8082:8080 -d")
                 }
             }
         }
